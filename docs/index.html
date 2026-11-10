@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' blob: data:; connect-src 'self' https://*.workers.dev; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Bildlabor — Generative Bildmodelle im Produktdesign</title>
+  <meta name="description" content="Der Bildmodell-Spielplatz für deinen Produktdesign-Kurs. Entwerfen, variieren und kritisch vergleichen.">
+  <link rel="stylesheet" href="styles.css"><script src="config.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">b.</span> Bildlabor<span class="brand-sub">PRODUKTDESIGN</span></a><div class="top-actions"><span id="connection" class="connection">Noch nicht verbunden</span><button id="logout" class="text-button" hidden>Abmelden & löschen ↗</button></div></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">GENERATIVE BILDMODELLE / PRAXISLABOR</p><h1>Ideen sichtbar machen.<br><span>Dann genauer hinsehen.</span></h1><p class="lede">Entwirf ein Produkt, verändere ein Detail und vergleiche die Ergebnisse.<br class="desktop-only"> Ein gutes Bild ist der Anfang – noch kein fertiger Entwurf.</p></div><div class="index-note"><span>01 — ENTWERFEN</span><span>02 — VARIIEREN</span><span>03 — HINTERFRAGEN</span></div></section>
+    <section id="access" class="access-panel" aria-labelledby="access-title"><div><p class="eyebrow">DEIN ZUGANG</p><h2 id="access-title">Bereit für dein Experiment?</h2><p>Den persönlichen Kurscode bekommst du von deiner Lehrperson.</p></div><form id="login-form"><label for="course-code">Kurscode</label><div class="inline-form"><input id="course-code" type="password" autocomplete="off" spellcheck="false" maxlength="64" placeholder="Kurscode einfügen" required><button class="primary" id="login-button">Labor öffnen <span aria-hidden="true">↗</span></button></div><p id="login-status" class="hint" role="status">Kein eigenes OpenAI-Konto nötig.</p></form></section>
+    <div id="setup-notice" class="notice" hidden>Die Website ist vorbereitet. Die Lehrperson muss noch den Worker verbinden. <a href="setup.html">Einrichtung öffnen ↗</a></div>
+    <div id="session-bar" class="session-bar" hidden><span id="course-name"></span><span id="quota" class="mono"></span></div>
+    <div class="workspace">
+      <section class="controls" aria-labelledby="experiment-title"><div class="section-heading"><span class="eyebrow">01 / DEIN EXPERIMENT</span><span class="small-label">TEXT + OPTIONAL BILD</span></div><h2 id="experiment-title">Was möchtest du entwerfen?</h2>
+        <form id="generate-form"><fieldset id="generation-fields">
+          <label for="prompt">Deine Bildbeschreibung <span id="char-count" class="label-aside">0 / 4000</span></label>
+          <textarea id="prompt" rows="6" maxlength="4000" required placeholder="Beschreibe Produkt, Form, Material, Perspektive und Licht. Was soll das Bild zeigen?"></textarea>
+          <div class="prompt-examples" aria-label="Beispielprompts"><span class="small-label">STARTPUNKTE</span><button type="button" data-example="lamp">Leuchte ↗</button><button type="button" data-example="bottle">Trinkflasche ↗</button><button type="button" data-example="material">Materialstudie ↗</button></div>
+          <div class="field-heading"><label for="reference">Ausgangsbild</label><span class="small-label">OPTIONAL</span></div>
+          <label class="dropzone" id="dropzone" for="reference"><input id="reference" type="file" accept="image/png,image/jpeg,image/webp"><span class="upload-symbol" aria-hidden="true">↑</span><strong>Skizze oder Bild hinzufügen</strong><span>Hier ablegen oder Datei auswählen</span><small>PNG, JPG oder WebP · maximal 8 MB</small></label>
+          <div id="reference-preview" class="reference-preview" hidden><img id="reference-image" alt="Dein Ausgangsbild"><div><strong id="reference-name"></strong><span class="hint">Wird als Bildvorlage verwendet.</span><button type="button" id="remove-reference" class="text-button">Bild entfernen ×</button></div></div>
+          <p id="upload-status" class="hint" role="status"></p>
+          <div class="settings-grid"><div class="full"><label for="model">Bildmodell</label><select id="model"><option value="gpt-image-2.5-flare">GPT Image 2.5 · Flare</option><option value="gpt-image-2.5-sunburst">GPT Image 2.5 · Sunburst</option><option value="gpt-image-1-mini">GPT Image 1 · Mini</option></select></div><div><label for="size">Bildformat</label><select id="size"><option value="1024x1024">Quadrat · 1:1</option><option value="1536x1024">Querformat · 3:2</option><option value="1024x1536">Hochformat · 2:3</option></select></div><div><label for="quality">Qualität</label><select id="quality"><option value="low">Entwurf</option><option value="medium">Standard</option></select></div></div>
+          <p class="privacy-note">Dein Prompt und dein Ausgangsbild werden zur Verarbeitung über Cloudflare an OpenAI gesendet. Lade nur Bilder hoch, die du im Kurs verwenden darfst.</p>
+          <button id="generate" class="primary generate" disabled>Mit Kurscode anmelden <span aria-hidden="true">↗</span></button>
+          <p class="hint">Ein Start verbraucht einen Versuch, auch bei einem API-Fehler.</p>
+        </fieldset></form>
+      </section>
+      <section class="result-section" aria-labelledby="result-title"><div class="section-heading"><span class="eyebrow">02 / DEIN ERGEBNIS</span><span id="result-tag" class="small-label">ARBEITSFLÄCHE</span></div><div class="result-title-row"><h2 id="result-title">Raum für deine Idee.</h2><button id="compare" class="text-button" hidden>Ausgangsbild zeigen</button></div>
+        <div id="canvas" class="canvas"><div id="empty-state" class="empty-state"><span class="empty-cross" aria-hidden="true">+</span><span class="mono">NOCH IST ALLES MÖGLICH.</span><p>Dein generiertes Bild erscheint hier.</p><span class="canvas-caption">PROMPT → BILD → NEUE FRAGEN</span></div><img id="result-image" alt="Generiertes Ergebnis" hidden><div id="loading" class="loading" hidden><div class="spinner" aria-hidden="true"></div><h3>Deine Idee nimmt Form an.</h3><p id="elapsed">Das Modell arbeitet …</p><small>Das kann einige Minuten dauern. Bitte lasse diesen Tab geöffnet.</small></div></div>
+        <p id="generation-status" role="status" class="status-line"></p>
+        <div id="result-actions" class="result-actions" hidden><a id="download" class="primary" download="bildlabor.png">Bild herunterladen ↓</a><button id="reuse" class="secondary">Als Ausgangsbild nutzen ↗</button><button id="download-notes" class="text-button">Prompt & Einstellungen ↓</button></div>
+        <section class="reflection"><span class="eyebrow">03 / GENAUER HINSEHEN</span><h3>Schön ist noch nicht fertig.</h3><div class="reflection-grid"><p><span>01</span>Stimmen Proportionen und Funktion?</p><p><span>02</span>Ist das Material glaubwürdig?</p><p><span>03</span>Was würdest du als Nächstes ändern?</p></div></section>
+      </section>
+    </div>
+    <section id="history-section" class="history-section" hidden><div class="section-heading"><h2>Deine Versuche in dieser Sitzung</h2><span class="small-label">LETZTE 6 BILDER · NUR IN DIESEM TAB</span></div><div id="history" class="history"></div></section>
+  </main>
+  <footer><span>Bildlabor <span class="footer-divider">/</span> Generative Bildmodelle im Produktdesign</span><span>Vor dem Verlassen: herunterladen & abmelden. <a href="setup.html">Für Lehrende ↗</a></span></footer>
+  <noscript>Bitte aktiviere JavaScript, um das Bildlabor zu verwenden.</noscript>
+</body></html>
